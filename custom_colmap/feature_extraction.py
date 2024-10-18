@@ -41,12 +41,12 @@ def detect_keypoints_ALIKED(
             with torch.inference_mode():
                 features = extractor.extract(image, resize=None)
 
-            keypoints = features["keypoints"].squeeze().detach().cpu().numpy()
+            keypoints = features["keypoints"].squeeze(dim=0).detach().cpu().numpy()
             keypoints = keypoints * original_size / new_size
 
             key = path.name
             f_keypoints[key] = keypoints
-            f_descriptors[key] = features["descriptors"].squeeze().detach().cpu().numpy()
+            f_descriptors[key] = features["descriptors"].squeeze(dim=0).detach().cpu().numpy()
 
     return
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
                 plt.figure(figsize=(60, 40))
                 plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                plt.scatter(keypoints.squeeze()[:, 0], keypoints.squeeze()[:, 1], s=10, c='r', marker='o')
+                plt.scatter(keypoints[:, 0], keypoints[:, 1], s=10, c='r', marker='o')
 
                 title = key
                 title += f'\n# of keypoints: {keypoints.shape[0]}'
